@@ -39,5 +39,3 @@ if __name__ == "__main__":
     output_string = "\n".join(f"{point[0]}:{point[1]}:{point[2]}" for point in path[1:])
     print(output_string)
     os.environ['COMPUTED_OUTPUT'] = output_string
-
-# n steps = 2 * pi * sqrt(radius) / speed
