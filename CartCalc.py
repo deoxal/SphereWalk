@@ -1,15 +1,14 @@
 import numpy as np
 import argparse
-import os
 
 def parse_point(point_str):
     return tuple(map(float, point_str.split(':')))
 
-def great_circle_path(start_point, angle, speed, num_steps, radius=np.sqrt(3)):
+def great_circle_path(start_point, angle, speed, num_steps):
     num_steps += 1
     start_point = parse_point(start_point)
-    r0 = np.array(start_point, dtype=float)
-    r0 = r0 / np.linalg.norm(r0) * radius
+    radius = np.linalg.norm(start_point)  # Compute radius from input
+    r0 = np.array(start_point, dtype=float)  # No normalization needed
     temp_vec = np.array([1.0, 0.0, 0.0]) if abs(r0[0]) < 0.9 else np.array([0.0, 1.0, 0.0])
     tangent1 = np.cross(r0, temp_vec)
     tangent1 /= np.linalg.norm(tangent1)
@@ -38,4 +37,4 @@ if __name__ == "__main__":
     path = great_circle_path(args.start, args.angle, args.speed, args.num_steps)
     output_string = "\n".join(f"{point[0]}:{point[1]}:{point[2]}" for point in path[1:])
     print(output_string)
-    os.environ['COMPUTED_OUTPUT'] = output_string
+    computed_output = output_string
