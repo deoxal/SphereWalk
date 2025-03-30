@@ -4,11 +4,13 @@ import argparse
 def parse_point(point_str):
     return tuple(map(float, point_str.split(':')))
 
-def great_circle_path(start_point, angle, speed, num_steps):
+def great_circle_path(start_point, angle, speed, num_steps, radius=None):
     num_steps += 1
     start_point = parse_point(start_point)
-    radius = np.linalg.norm(start_point)  # Compute radius from input
-    r0 = np.array(start_point, dtype=float)  # No normalization needed
+    r0 = np.array(start_point, dtype=float)
+    if radius is None:
+        radius = np.linalg.norm(r0)  # Compute radius from start point if not provided
+    r0 = r0 / np.linalg.norm(r0) * radius  # Normalize to the given or computed radius
     temp_vec = np.array([1.0, 0.0, 0.0]) if abs(r0[0]) < 0.9 else np.array([0.0, 1.0, 0.0])
     tangent1 = np.cross(r0, temp_vec)
     tangent1 /= np.linalg.norm(tangent1)
@@ -31,10 +33,11 @@ if __name__ == "__main__":
     parser.add_argument("angle", type=float, help="Travel direction in radians (0 to 2π)")
     parser.add_argument("speed", type=float, help="Constant speed")
     parser.add_argument("num_steps", type=int, help="Number of steps to compute")
+    parser.add_argument("radius", type=float, nargs="?", default=None, help="Optional radius of the sphere")
     
     args = parser.parse_args()
     
-    path = great_circle_path(args.start, args.angle, args.speed, args.num_steps)
+    path = great_circle_path(args.start, args.angle, args.speed, args.num_steps, args.radius)
     output_string = "\n".join(f"{point[0]}:{point[1]}:{point[2]}" for point in path[1:])
     print(output_string)
     computed_output = output_string
