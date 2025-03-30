@@ -9,7 +9,7 @@ def great_circle_path(start_point, angle, speed, num_steps, radius=None):
     start_point = parse_point(start_point)
     r0 = np.array(start_point, dtype=float)
     if radius is None:
-        radius = np.linalg.norm(r0)  # Compute radius from start point if not provided
+        radius = np.sqrt(r0[0] * r0[0] + r0[1] * r0[1] + r0[2] * r0[2])
     r0 = r0 / np.linalg.norm(r0) * radius  # Normalize to the given or computed radius
     temp_vec = np.array([1.0, 0.0, 0.0]) if abs(r0[0]) < 0.9 else np.array([0.0, 1.0, 0.0])
     tangent1 = np.cross(r0, temp_vec)
